@@ -1,7 +1,16 @@
-name: Deploy NikVisuals staging to GitHub Pages
+name: Deploy NikVisuals to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: Deployment mode
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: staging
 
 permissions:
   contents: read
@@ -29,7 +38,7 @@ jobs:
           cache-dependency-path: source/package-lock.json
       - run: npm ci
         working-directory: source
-      - run: npm run build:staging
+      - run: npm run build:${{ inputs.environment }}
         working-directory: source
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
